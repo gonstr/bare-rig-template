@@ -1,0 +1,33 @@
+name: myapp
+namespace: mynamespace
+
+deployment:
+  replicas: 2
+  image: fareoffice/myapp
+  tag: latest # (probably want to supply with --value when building)
+  port: 8080
+  readinessPath: /health
+
+  resources:
+    requests:
+      cpu: 200m
+      memory: 400m
+    limits:
+      cpu: 400m
+      memory: 800m
+  
+  env:
+    - name: FOO
+      value: bar
+  
+  envFrom:
+    - secretRef:
+        name: mysecret
+        optional: false
+
+# Comment this out for backend services not exposed outside the cluster
+ingress:
+  host: myapp.int.fareonline.net # (same here, supply this when building since it differs per cluster)
+
+# Enable prometheus scraping if the microservice has a /metrics endpoint
+serviceMonitor: true

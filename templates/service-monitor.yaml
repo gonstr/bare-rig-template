@@ -1,0 +1,14 @@
+{{- if .values.serviceMonitor }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ .values.name }}
+  labels:
+    release: prometheus-operator
+spec:
+  selector:
+    matchLabels:
+      app: {{ .values.name }}
+  endpoints:
+  - port: web
+{{- end }}
